@@ -4,7 +4,7 @@
  *                  graph. It solves exercise 25 in "Algorithms",
  *                  by Jeff Erickson, page 306.
  * DATE:            11/11/2019
- * AUTHOR:          Nieves Montes Gómez
+ * AUTHOR:          Nieves Montes GÃ³mez
  **********************************************************************************/
 
 #include <iostream>
@@ -19,12 +19,12 @@
 using namespace std;
 
 struct node {
-	string name;									// name of the node
-	bool visited = false;							// has the node been visited
-	double saf = 0.f;								// safety function of node
-	struct node* pred = NULL;						// predecessor
+	string name;					// name of the node
+	bool visited = false;				// has the node been visited
+	double saf = 0.f;				// safety function of node
+	struct node* pred = NULL;			// predecessor
 	vector <pair <struct node*, double>> adjList;	// adjacency list: first element is successor, 
-};													// second is probability of edge to successor
+};							// second is probability of edge to successor
 
 /*** Functions to sort a queue of nodes according to descending safety function ***/
 bool priority(node* a, node* b) { return (a->saf > b->saf); }
