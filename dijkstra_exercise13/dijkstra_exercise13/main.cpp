@@ -17,11 +17,11 @@
 
 using namespace std;
 
-typedef struct node {
+struct node {
 	char name[3];									// name of the node
-	bool visited;									// has the node been visited
-	double saf;										// safety function of node
-	struct node* pred;								// predecessor
+	bool visited = false;							// has the node been visited
+	double saf = 0.f;								// safety function of node
+	struct node* pred = NULL;						// predecessor
 	vector <pair <struct node*, double>> adjList;	// adjacency list: first element is successor, 
 };													// second is probability of edge to successor
 
@@ -40,10 +40,10 @@ void sortQueue(queue <struct node*> &Q) {
 int main(int argc, char** argv) {
 
 // build nodes
-	struct node* VA = new node;		strcpy_s(VA->name, "VA");		VA->saf = 1.f;		VA->pred = NULL;		VA->visited = true;
-	struct node* TN = new node;		strcpy_s(TN->name, "TN");		TN->saf = 0.f;		TN->pred = NULL;		TN->visited = false;
-	struct node* NV = new node;		strcpy_s(NV->name, "NV");		NV->saf = 0.f;		NV->pred = NULL;		NV->visited = false;
-	struct node* AZ = new node;		strcpy_s(AZ->name, "AZ");		AZ->saf = 0.f;		AZ->pred = NULL;		AZ->visited = false;
+	struct node* VA = new node;		strcpy_s(VA->name, "VA");		VA->saf = 1.f;		VA->visited = true;
+	struct node* TN = new node;		strcpy_s(TN->name, "TN");		
+	struct node* NV = new node;		strcpy_s(NV->name, "NV");		
+	struct node* AZ = new node;		strcpy_s(AZ->name, "AZ");		
 
 // build directed edges
 	(VA->adjList).push_back(make_pair(AZ, 0.5));
