@@ -19,12 +19,12 @@
 using namespace std;
 
 struct node {
-	string name;					// name of the node
-	bool visited = false;				// has the node been visited
-	double saf = 0.f;				// safety function of node
-	struct node* pred = NULL;			// predecessor
-	vector <pair <struct node*, double>> adjList;	// adjacency list: first element is successor, 
-};							// second is probability of edge to successor
+	string name;				
+	bool visited = false;				
+	double saf = 0.f;				
+	struct node* pred = NULL;		
+	vector <pair <struct node*, double>> adjList;	
+};							
 
 /*** Functions to sort a queue of nodes according to descending safety function ***/
 bool priority(node* a, node* b) { return (a->saf > b->saf); }
