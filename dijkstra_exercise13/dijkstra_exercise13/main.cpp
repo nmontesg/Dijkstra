@@ -10,6 +10,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include <queue>
 #include <algorithm>
 #include <vector>
@@ -18,7 +19,7 @@
 using namespace std;
 
 struct node {
-	char name[3];									// name of the node
+	string name;									// name of the node
 	bool visited = false;							// has the node been visited
 	double saf = 0.f;								// safety function of node
 	struct node* pred = NULL;						// predecessor
@@ -40,10 +41,10 @@ void sortQueue(queue <struct node*> &Q) {
 int main(int argc, char** argv) {
 
 // build nodes
-	struct node* VA = new node;		strcpy_s(VA->name, "VA");		VA->saf = 1.f;		VA->visited = true;
-	struct node* TN = new node;		strcpy_s(TN->name, "TN");		
-	struct node* NV = new node;		strcpy_s(NV->name, "NV");		
-	struct node* AZ = new node;		strcpy_s(AZ->name, "AZ");		
+	struct node* VA = new node;		VA->name = "VA";		VA->saf = 1.f;		VA->visited = true;
+	struct node* TN = new node;		TN->name = "TN";		
+	struct node* NV = new node;		NV->name = "NV";		
+	struct node* AZ = new node;		AZ->name = "AZ";		
 
 // build directed edges
 	(VA->adjList).push_back(make_pair(AZ, 0.5));
