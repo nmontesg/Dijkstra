@@ -8,8 +8,6 @@
  **********************************************************************************/
 
 #include <iostream>
-#include <cstdlib>
-#include <cstring>
 #include <string>
 #include <queue>
 #include <algorithm>
