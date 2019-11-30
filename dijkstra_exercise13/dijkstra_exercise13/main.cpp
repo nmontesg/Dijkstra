@@ -90,5 +90,11 @@ int main(int argc, char** argv) {
 			S.pop();
 		}
 	}
+
+	else if (Q.empty()) {
+		cout << "Error: Dijkstra algorithm did not find an exit." << endl;
+		exit(EXIT_FAILURE);
+	}
+
 	return 0;
 }
