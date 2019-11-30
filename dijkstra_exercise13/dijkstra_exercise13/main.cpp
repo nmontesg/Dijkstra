@@ -12,42 +12,22 @@
 #include <cstring>
 #include <queue>
 #include <algorithm>
+#include <vector>
+#include <utility>
 
 using namespace std;
 
 typedef struct node {
-	char name[3];       // name of the node
-	int n_succ;         // number of successors
-	bool visited;       // has the node been visited
-	float saf;          // safety function of node
-	struct node** adj;  // adjacency list
-	float* probs;       // probabilities of edges to adjacent nodes
-} node;
+	char name[3];									// name of the node
+	bool visited;									// has the node been visited
+	double saf;										// safety function of node
+	struct node* pred;								// predecessor
+	vector <pair <struct node*, double>> adjList;	// adjacency list: first element is successor, 
+};													// second is probability of edge to successor
 
-/*** buildNode() allocates memory to all the nodes ***/
-node* buildNode(char state[3], int succ) {
-	node* newNode = NULL;
-	newNode = (node*)malloc(sizeof(struct node));
-	strcpy_s(newNode->name, state);
-	newNode->n_succ = succ;
-	newNode->visited = false;
-	newNode->saf = 0.f;
-	newNode->adj = (struct node**)malloc((succ + 1) * sizeof(struct node*));
-	newNode->probs = (float*)malloc(succ * sizeof(float));
-	return newNode;
-}
-
-/*** freeNode() frees the allocated memory for a node ***/
-void freeNode(node* anode) {
-	free(anode->adj);
-	free(anode->probs);
-	free(anode);
-}
-
-/*** Functions to sort a queue of nodes according to descending
-safety function ***/
+/*** Functions to sort a queue of nodes according to descending safety function ***/
 bool priority(node* a, node* b) { return (a->saf > b->saf); }
-queue <struct node*> sortQueue(queue <struct node*> Q) {
+void sortQueue(queue <struct node*> &Q) {
 	vector <struct node*> aux;
 	while (!Q.empty()) {
 		aux.push_back(Q.front());
@@ -55,61 +35,54 @@ queue <struct node*> sortQueue(queue <struct node*> Q) {
 	}
 	sort(aux.begin(), aux.end(), priority);
 	for (int i = 0; i < aux.size(); i++) { Q.push(aux[i]); }
-	return Q;
 }
 
 int main(int argc, char** argv) {
 
-	/*** build the directed graph ***/
-	node* VA = buildNode((char*)"VA", 3); // Langley, VA (ROOT)
-	VA->saf = 1.f;                        // set VA node as root
-	node* TN = buildNode((char*)"TN", 2); // Memphis, TN
-	node* NV = buildNode((char*)"NV", 1); // Las Vegas, NV
-	node* AZ = buildNode((char*)"AZ", 0); // Area 51, AZ
+// build nodes
+	struct node* VA = new node;		strcpy_s(VA->name, "VA");		VA->saf = 1.f;		VA->pred = NULL;		VA->visited = true;
+	struct node* TN = new node;		strcpy_s(TN->name, "TN");		TN->saf = 0.f;		TN->pred = NULL;		TN->visited = false;
+	struct node* NV = new node;		strcpy_s(NV->name, "NV");		NV->saf = 0.f;		NV->pred = NULL;		NV->visited = false;
+	struct node* AZ = new node;		strcpy_s(AZ->name, "AZ");		AZ->saf = 0.f;		AZ->pred = NULL;		AZ->visited = false;
 
-// adjacency list is arranged alphabetically
-	*(VA->adj + 0) = AZ;    *(VA->probs + 0) = 0.5;
-	*(VA->adj + 1) = NV;    *(VA->probs + 1) = 0.2;
-	*(VA->adj + 2) = TN;    *(VA->probs + 2) = 0.7;
-	*(VA->adj + 3) = NULL;
-	*(TN->adj + 0) = AZ;    *(TN->probs + 0) = 0.9;
-	*(TN->adj + 1) = NV;    *(TN->probs + 1) = 0.1;
-	*(TN->adj + 2) = NULL;
-	*(NV->adj + 0) = AZ;    *(NV->probs + 0) = 0.5;
-	*(NV->adj + 1) = NULL;
-	*(AZ->adj + 0) = NULL;
-
-	// dump all nodes into a queue
+// build directed edges
+	(VA->adjList).push_back(make_pair(AZ, 0.5));
+	(VA->adjList).push_back(make_pair(TN, 0.7));
+	(VA->adjList).push_back(make_pair(NV, 0.2));
+	(TN->adjList).push_back(make_pair(NV, 0.1));
+	(TN->adjList).push_back(make_pair(AZ, 0.9));
+	(NV->adjList).push_back(make_pair(AZ, 0.5));
+	
+// dump all nodes into a queue
 	queue <struct node*> Q;
 	Q.push(TN); Q.push(NV); Q.push(AZ); Q.push(VA);
-	Q = sortQueue(Q);
+	sortQueue(Q);
 
-	// empty queue to dump visited nodes
+// empty queue to dump visited nodes
 	queue <struct node*> S;
+	
+/*** DIJKSTRA ALGORITHM ***/
 	node* currNode = NULL;
-	node* possNextNode = NULL;
-
-	/*** DIJKSTRA ALGORITHM ***/
-	int j;
+	node* succ = NULL;
+	vector <pair<struct node*, double>>::iterator it;
+	double p;
 	while (!Q.empty()) {
 		currNode = Q.front();       // extract node of highest saf. function
 		currNode->visited = true;   // set it to "visited"
 		Q.pop();                    // delete it from Q
 		S.push(currNode);           // put it in S
-		if (currNode->saf == 0) { cout << "Sorry, you have been abducted" << endl; break; }
-		if (currNode == AZ) { cout << "Congratulations, you have reached area 51, AZ." << endl; break; }
-		j = 0;  // check all adjacent nodes, but only if they are not in Q
-		while (*(currNode->adj + j) != NULL) {
-			possNextNode = *(currNode->adj + j);
-			if ((possNextNode->saf < currNode->saf * *(currNode->probs + j)) && (possNextNode->visited == false)) {
-				possNextNode->saf = currNode->saf * *(currNode->probs + j);
-			}
-			j++;
+		if (currNode->saf == 0) {cout << "Sorry, you have been abducted" << endl; break;}
+		if (currNode == AZ) {cout << "Congratulations, you have reached area 51, AZ." << endl; break;}
+		// check all adjacent nodes, but only if they are not in Q
+		for (it = (currNode->adjList).begin(); it != (currNode->adjList).end(); ++it) {
+			succ = it->first;
+			p = it->second;
+			if ((succ->saf < currNode->saf * p) && (succ->visited == false)) succ->saf = currNode->saf * p;
 		}
-		Q = sortQueue(Q);   // arrange nodes that are left in descending saf.function
+		sortQueue(Q);				// arrange nodes that are left in descending saf.function
 	}
 
-	// print the result
+// print the result
 	if (currNode == AZ) {
 		cout << "This has been your trip:\n";
 		while (!S.empty()) {
@@ -118,9 +91,5 @@ int main(int argc, char** argv) {
 			S.pop();
 		}
 	}
-
-	// free allocated memory for the nodes
-	freeNode(VA);   freeNode(TN);   freeNode(NV);   freeNode(AZ);
-
 	return 0;
 }
