@@ -3,16 +3,19 @@
 #%% Load data on flights
 import pandas as pd
 import numpy as np
+# load the data
 data = pd.read_csv("flights.csv")
-data.apply (pd.to_numeric, errors='coerce')
+# delete missing data
 data.dropna(inplace=True)
+# departure and arrival times (hmm) as integers
 data[['dep_time', 'arr_time']] = data[['dep_time', 'arr_time']].astype(int)
-flights_raw = data[['year', 'month', 'day', 'dep_time', 'arr_time', 
-                'origin', 'dest']]
-flights_raw['dep_hour'] = flights_raw['dep_time']//100
-flights_raw['dep_min'] = flights_raw['dep_time']%100
-flights_raw['arr_hour'] = flights_raw['arr_time']//100
-flights_raw['arr_min'] = flights_raw['arr_time']%100
+# select and format the data
+flights_raw = data[['origin', 'dest', 'year', 'month', 'day']]
+flights_raw.loc[:,'dep_hour'] = data['dep_time']//100
+flights_raw.loc[:,'dep_min'] = data['dep_time']%100
+flights_raw.loc[:,'arr_hour'] = data['arr_time']//100
+flights_raw.loc[:,'arr_min'] = data['arr_time']%100
+# build date of departure as 
 flights_raw['dep_date'] = pd.to_datetime(dict(year=flights_raw.year,
        month=flights_raw.month,
        day=flights_raw.day,
@@ -40,11 +43,12 @@ airports['predecessor'] = ""
 airports['cost'] = np.datetime64(pd.Timestamp.max)
 # index of flight that took us to that airport: unknown for the moment
 airports['flight_id'] = np.nan
-flights.origin = airports.code.sample(327346, replace=True).values
-flights.dest = airports.code.sample(327346, replace=True).values
+# shuffle airports to have flights between many locations
+flights.origin = airports.code.sample(flights.shape[0], replace=True).values
+flights.dest = airports.code.sample(flights.shape[0], replace=True).values
 #%%
 
-#%% Select source and destination
+#%% Select random source and destination
 selection = airports.code.sample(2)
 source = selection.values[0]
 dest= selection.values[1]
