@@ -91,9 +91,7 @@ int main(int argc, char** argv) {
 			succ = it->first;
 			aux = it->second + succ->p - it->second * succ->p;
 			new_risk = currNode->risk + aux - currNode->risk * aux;
-			if ((succ->risk > new_risk) && (succ->visited == false)) {
-				succ->risk = new_risk;
-			}
+			if ((succ->risk > new_risk) && (succ->visited == false)) succ->risk = new_risk;
 		}
 		sortQueue(Q);   // arrange nodes that are left in descending saf.function
 	}
