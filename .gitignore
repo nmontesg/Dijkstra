@@ -9,10 +9,11 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
+*.vcxproj*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-*.csv
 
 # Build results
 [Dd]ebug/
