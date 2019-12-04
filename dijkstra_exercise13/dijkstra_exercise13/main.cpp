@@ -96,5 +96,8 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
+// free memory
+	delete VA;	delete TN;	delete NV;	delete AZ;
+
 	return 0;
 }

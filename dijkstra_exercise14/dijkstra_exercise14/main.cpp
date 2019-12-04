@@ -111,5 +111,9 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
+// free memory
+	delete a;	delete b;	delete c;	delete d;	delete e;	delete f;	delete g;
+	delete h;	delete i;	delete j;	delete k;
+
 	return 0;
 }
