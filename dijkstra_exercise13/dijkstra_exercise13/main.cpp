@@ -13,6 +13,10 @@
 #include <algorithm>
 #include <vector>
 #include <utility>
+// check memory leaks
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace std;
 
@@ -37,6 +41,9 @@ void sortQueue(queue <struct node*> &Q) {
 }
 
 int main(int argc, char** argv) {
+
+// check memory leaks
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 // build nodes
 	struct node* VA = new node;		VA->name = "VA";		VA->saf = 1.f;		VA->visited = true;

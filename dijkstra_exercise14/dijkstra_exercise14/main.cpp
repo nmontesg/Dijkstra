@@ -12,6 +12,10 @@
 #include <queue>
 #include <algorithm>
 #include <vector>
+ // check memory leaks
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace std;
 
@@ -42,6 +46,8 @@ void sortQueue(queue <struct node*>& Q) {
 }
 
 int main(int argc, char** argv) {
+
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 
 // build the nodes
 	struct node* a = new node;		a->name = "a";		a->p = 0.3;		a->risk = a->p;			a->visited = true;
@@ -113,7 +119,7 @@ int main(int argc, char** argv) {
 
 // free memory
 	delete a;	delete b;	delete c;	delete d;	delete e;	delete f;	delete g;
-	delete h;	delete i;	delete j;	delete k;
+	//delete h;	delete i;	delete j;	delete k;
 
 	return 0;
 }
