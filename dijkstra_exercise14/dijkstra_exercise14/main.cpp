@@ -12,8 +12,6 @@
 #include <queue>
 #include <algorithm>
 #include <vector>
- // check memory leaks
-#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 
@@ -119,7 +117,7 @@ int main(int argc, char** argv) {
 
 // free memory
 	delete a;	delete b;	delete c;	delete d;	delete e;	delete f;	delete g;
-	//delete h;	delete i;	delete j;	delete k;
+	delete h;	delete i;	delete j;	delete k;
 
 	return 0;
 }
